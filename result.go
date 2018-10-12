@@ -4,10 +4,9 @@ package dry
 type Value interface{}
 
 // Result is (not really) a monad that is used to model the result of an
-// operation. It can be either a Success that wraps a value context or a
-// Failure that wraps an error context.
+// operation. It can be either a Success or a Failure that wraps a value.
 type Result interface {
-	// Wrapped returns the context that is wrapped by a Result.
+	// Wrapped returns the value that is wrapped by a Result.
 	Wrapped() Value
 
 	// Success returns a boolean. If the result is a success, it is true.
@@ -18,12 +17,10 @@ type Result interface {
 	// Otherwise, it is false.
 	Failure() bool
 
-	// Value takes a key and returns the value associated with that key in the
-	// wrapped context.
+	// Value returns the value that is wrapped by a Success result.
 	Value() Value
 
-	// Error returns an error. If the wrapped context includes a dry Error, it
-	// is that error. Otherwise, it is nil.
+	// Error returns the value that is wrapped by a Failure result.
 	Error() Value
 }
 

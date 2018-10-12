@@ -19,21 +19,19 @@ oNoes := dry.Failure("you broke it")
 
 ```
 
-If the context contains a `dry` error, the resulting ... result will be a failure. Otherwise, the result is a success. To determine which of these is the case, you can use the `Success()` and `Failure()` methods:
+Also, in the event that you're handed any old `Result` and you want to check for success/failure, you can use the `Success()` and `Failure()` methods on the resuit:
 
 ```go
 // if successful, let's do some stuff
 if result.Success() {
-  doStuff()
+  doStuff(result.Value())
 }
 
 // if failure, let's do some different stuff
 if result.Failure() {
-  doOtherStuff()
+  doOtherStuff(result.Error())
 }
 ```
-
-Additionally, you can use the `Value()` method (on sucesses), and the `Error()` method (on failures) to access the wrapped data.
 
 ## Transactions ##
 
@@ -43,7 +41,7 @@ That said, I never saw a wheel I didn't want to reinvent, so here we are!
 
 The short description of a transaction that I like to go with is "a multi-step process that can fail at any point, stop execution, and allow for recovery".
 
-To that end, a `dry.Step` is a very specific type of function, in as much as it's any fuction that takes a `dry.Value` and returns a `dry.Result`. Following from this, a `dry.Transaction` is a collection of `Step`s that can be `Call`ed with a context, and the content of the returned `Result` from one `Step` is passed in as input to the next `Step`. In the fine tradition of providing complicated examples to perform trivial tasks, here's a quick example that increments an integer:
+To that end, a `Step` is a very specific type of function, in as much as it's any fuction that takes a `Value` and returns a `Result`. Following from this, a `Transaction` is a collection of `Step`s that can be `Call`ed with an input `Value`, and the content of the returned `Result` from one `Step` is passed in as input to the next `Step`. In the fine tradition of providing complicated examples to perform trivial tasks, here's a quick example that increments an integer:
 
 ```go
 package main

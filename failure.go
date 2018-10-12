@@ -1,6 +1,6 @@
 package dry
 
-// Failure wraps a context in a failure Result
+// Failure wraps a value in a failure Result
 func Failure(value Value) Result {
 	return &failure{
 		&baseResult{value: value},

@@ -2,7 +2,7 @@ package dry
 
 // Step is a function that can be used as a step in a Transaction.
 //
-// Any given step is passed a context, and it must return a Result.
+// Any given step is passed a Value, and it must return a Result.
 type Step func(Value) Result
 
 // Transaction is a model that describes a multi-step process that can fail
@@ -26,8 +26,9 @@ func NewTransaction(steps ...Step) *Transaction {
 	return &Transaction{steps: steps}
 }
 
-// Transact takes a context and a list of Steps, performs the transaction
-// described by those arguments, and returns the resulting context.
+// Transact takes a Value and a list of Steps, performs the transaction
+// described by those arguments, and returns the final Result of those
+// sequential operations.
 func Transact(input Value, steps ...Step) Result {
 	return NewTransaction(steps...).Call(input)
 }
@@ -43,13 +44,13 @@ func (transaction *Transaction) Step(step Step) *Transaction {
 	return transaction
 }
 
-// Call takes a context, which is then propagated through the list of steps
+// Call takes a Value, which is then propagated through the list of steps
 // associated with the transaction.
 //
 // The result of each step is passed as input to its subsequent step, and the
 // result of the final step is returned.
 //
-// If any step adds an error to the context, the context is immediately returned
+// If any step results in a Failure, that failure is immediately returned
 // and steps after the failing step are skipped.
 func (transaction *Transaction) Call(value Value) Result {
 	result := Success(value)

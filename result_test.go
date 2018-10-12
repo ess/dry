@@ -1,50 +1,42 @@
 package dry
 
 import (
-	"context"
-	"errors"
 	"testing"
 )
 
-func successContext() context.Context {
-	return testContext()
-}
-
-func failureContext() context.Context {
-	return context.WithValue(successContext(), dryError, errors.New("failure"))
-}
-
 func TestResult_Wrapped(t *testing.T) {
 	t.Run("when the result is a failure", func(t *testing.T) {
-		ctx := testContext()
-		result := Failure(ctx)
+		value := "holy failure, batman"
+		result := Failure(value)
 
-		t.Run("it is the wrapped context", func(t *testing.T) {
-			if result.Wrapped() != ctx {
-				t.Errorf("expected the wrapped context")
+		t.Run("it is the wrapped value", func(t *testing.T) {
+			actual := result.Wrapped()
+
+			if actual != value {
+				t.Errorf("expected '%s', got '%s'", value, actual)
 			}
 		})
 	})
 
 	t.Run("when the result is a success", func(t *testing.T) {
-		ctx := testContext()
-		result := Success(ctx)
+		value := "what great success"
+		result := Success(value)
 
-		t.Run("it is the wrapped context", func(t *testing.T) {
-			if result.Wrapped() != ctx {
-				t.Errorf("expected the wrapped context")
+		t.Run("it is the wrapped value", func(t *testing.T) {
+			actual := result.Wrapped()
+
+			if actual != value {
+				t.Errorf("expected '%s', got '%s'", value, actual)
 			}
 		})
 	})
 }
 
 func TestResult_Value(t *testing.T) {
-	k := key(1)
-	value := "turned to gold"
+	value := "my sausages turned to gold"
 
 	t.Run("when the result is a failure", func(t *testing.T) {
-		ctx := context.WithValue(testContext(), k, value)
-		result := Failure(ctx)
+		result := Failure(value)
 
 		t.Run("it is nil", func(t *testing.T) {
 			actual := result.Value()
@@ -57,15 +49,13 @@ func TestResult_Value(t *testing.T) {
 	})
 
 	t.Run("when the result is a success", func(t *testing.T) {
-		ctx := context.WithValue(testContext(), k, value)
-		result := Success(ctx)
+		result := Success(value)
 
 		t.Run("it is the wrapped value", func(t *testing.T) {
-			expected := result.Wrapped()
 			actual := result.Value()
 
-			if actual != expected {
-				t.Errorf("expected '%s', got '%s'", expected, actual)
+			if actual != value {
+				t.Errorf("expected '%s', got '%s'", value, actual)
 			}
 		})
 
@@ -73,24 +63,23 @@ func TestResult_Value(t *testing.T) {
 }
 
 func TestResult_Error(t *testing.T) {
+	value := "hello i am an error how are you"
+
 	t.Run("when the result is a failure", func(t *testing.T) {
-		ctx := testContext()
-		result := Failure(ctx)
+		result := Failure(value)
 
 		t.Run("it is the wrapped value", func(t *testing.T) {
-			expected := result.Wrapped()
 			actual := result.Error()
 
-			if actual != expected {
-				t.Errorf("expected the context error, got '%s'", actual)
+			if actual != value {
+				t.Errorf("expected '%s', got '%s'", value, actual)
 			}
 		})
 
 	})
 
 	t.Run("when the result is a success", func(t *testing.T) {
-		ctx := testContext()
-		result := Success(ctx)
+		result := Success(value)
 
 		t.Run("it is nil", func(t *testing.T) {
 			actual := result.Error()
@@ -105,8 +94,7 @@ func TestResult_Error(t *testing.T) {
 
 func TestResult_Success(t *testing.T) {
 	t.Run("when the result is a failure", func(t *testing.T) {
-		ctx := testContext()
-		result := Failure(ctx)
+		result := Failure(nil)
 
 		t.Run("it is false", func(t *testing.T) {
 			if result.Success() {
@@ -117,8 +105,7 @@ func TestResult_Success(t *testing.T) {
 	})
 
 	t.Run("when the result is a success", func(t *testing.T) {
-		ctx := testContext()
-		result := Success(ctx)
+		result := Success(nil)
 
 		t.Run("it is true", func(t *testing.T) {
 			if !result.Success() {
@@ -131,8 +118,7 @@ func TestResult_Success(t *testing.T) {
 
 func TestResult_Failure(t *testing.T) {
 	t.Run("when the result is a failure", func(t *testing.T) {
-		ctx := testContext()
-		result := Failure(ctx)
+		result := Failure(nil)
 
 		t.Run("it is true", func(t *testing.T) {
 			if !result.Failure() {
@@ -143,8 +129,7 @@ func TestResult_Failure(t *testing.T) {
 	})
 
 	t.Run("when the result is a success", func(t *testing.T) {
-		ctx := testContext()
-		result := Success(ctx)
+		result := Success(nil)
 
 		t.Run("it is false", func(t *testing.T) {
 			if result.Failure() {
@@ -156,18 +141,14 @@ func TestResult_Failure(t *testing.T) {
 }
 
 func TestSuccess(t *testing.T) {
-	ctx := testContext()
-
-	result, isSuccess := Success(ctx).(*success)
+	result, isSuccess := Success(nil).(*success)
 	if !isSuccess {
 		t.Errorf("expected a success, got %T", result)
 	}
 }
 
 func TestFailure(t *testing.T) {
-	ctx := testContext()
-
-	result, isFailure := Failure(ctx).(*failure)
+	result, isFailure := Failure(nil).(*failure)
 	if !isFailure {
 		t.Errorf("expected a failure, got %T", result)
 	}

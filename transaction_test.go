@@ -83,7 +83,7 @@ func TestTransact(t *testing.T) {
 			}
 		})
 
-		t.Run("it does not alter the context", func(t *testing.T) {
+		t.Run("it does not alter its input", func(t *testing.T) {
 			actual := result.Wrapped()
 
 			if !reflect.DeepEqual(actual, ctx) {
@@ -155,7 +155,7 @@ func TestTransaction_Call(t *testing.T) {
 			}
 		})
 
-		t.Run("it does not alter the context", func(t *testing.T) {
+		t.Run("it does not alter its input", func(t *testing.T) {
 			actual := result.Wrapped()
 
 			if !reflect.DeepEqual(actual, ctx) {

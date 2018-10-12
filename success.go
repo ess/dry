@@ -1,6 +1,6 @@
 package dry
 
-// Success wraps a context in a success Result
+// Success wraps a value in a success Result
 func Success(value Value) Result {
 	return &success{
 		&baseResult{value: value},
