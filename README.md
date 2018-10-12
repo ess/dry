@@ -154,3 +154,7 @@ goroutine 1 [running]:
 main.main()
 	/path/to/dry/examples/main.go:26 +0x563
 ```
+
+## History ##
+
+* v1.0.0 - Initial Release
