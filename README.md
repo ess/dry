@@ -1,5 +1,9 @@
 # dry #
 
+[![Build Status](https://travis-ci.org/ess/dry.svg?branch=master)](https://travis-ci.org/ess/dry)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ess/dry)](https://goreportcard.com/report/github.com/ess/dry)
+[![Documentation](https://godoc.org/github.com/ess/dry?status.svg)](http://godoc.org/github.com/ess/dry)
+
 A minimal set of quasi-functional programming constructs for Go, inspired by [dry-rb](https://dry-rb.org).
 
 
